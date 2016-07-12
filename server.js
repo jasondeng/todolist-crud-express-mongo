@@ -5,6 +5,7 @@ const MongoClient = require('mongodb').MongoClient;
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended:true }));
+app.set('view engine', 'ejs');
 
 var config = require('./env.json');
 
@@ -18,11 +19,10 @@ MongoClient.connect(config.MONGO_URI, (err, database) => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html')
     db.collection('quotes')
         .find()
         .toArray(function (err, results) {
-            console.log(results);
+            res.render('index.ejs', {quotes: results});
     });
 });
 
